@@ -28,7 +28,7 @@ U8X8_SSD1306_128X64_NONAME_SW_I2C u8x8(/* clock=*/ 15, /* data=*/ 4, /* reset=*/
 WiFiClientSecure net = WiFiClientSecure();
 MQTTClient client = MQTTClient(256);
 
-void connectAWS()
+void connectWifi()
 {
   delay(500);
   WiFi.mode(WIFI_STA);
@@ -52,7 +52,16 @@ void connectAWS()
   net.setCACert(AWS_CERT_CA);
   net.setCertificate(AWS_CERT_CRT);
   net.setPrivateKey(AWS_CERT_PRIVATE);
+}
 
+void connectAWS()
+{
+  connectWifi();
+  connectMQTT();
+}
+
+void connectMQTT()
+{
   // Connect to the MQTT broker on the AWS endpoint we defined earlier
   client.begin(AWS_IOT_ENDPOINT, 8883, net);
   client.setKeepAlive(120);
