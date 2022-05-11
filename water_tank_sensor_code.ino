@@ -10,7 +10,7 @@
 #define PUBLISH_TOPIC   "rtlee/feeds/test"
 #define TEST_TOPIC   "rtlee/feeds/test"
 #define SUBSCRIBE_TOPIC "rtlee/feeds/sub"
-#define ANALOG_PIN 33
+#define ANALOG_PIN A7
 #define VREF 3300 // ADC's reference voltage on your Arduino,typical value:5000mV
 #define CURRENT_INIT 4.00 // Current @ 0mm (uint: mA)
 #define CURRENT_MAX 20.00 // Current @ 0mm (uint: mA)
