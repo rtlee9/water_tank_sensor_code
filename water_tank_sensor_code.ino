@@ -7,7 +7,7 @@
 
 
 // The MQTT topics that this device should publish/subscribe
-#define PUBLISH_TOPIC   "rtlee/feeds/test"
+#define PUBLISH_TOPIC   "rtlee/feeds/water-sensor-feed"
 #define TEST_TOPIC   "rtlee/feeds/test"
 #define SUBSCRIBE_TOPIC "rtlee/feeds/sub"
 #define ANALOG_PIN A7
