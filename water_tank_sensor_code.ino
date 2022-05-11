@@ -21,8 +21,8 @@
 #define MM_PER_INCH 25.4 // millimeters per inch
 #define CURRENT_OFFSET 0.6 // calibration constant in amps
 #define NUM_READINGS 50
+#define PUB_FREQUENCY 5000  // ms frequency of publishing sensor readings
 
-uint32_t pub_frequency = 60000; // ms frequency of publishing sensor readings
 int status = WL_IDLE_STATUS;     // the WiFi radio's status
 WiFiClient wifiClient;
 long lastReconnectAttempt = 0;
@@ -115,10 +115,6 @@ void setup() {
   lastReconnectAttempt = 0;
 }
 
-void callback(char* topic, byte* payload, unsigned int length) {
-  // handle message arrived
-}
-
 void loop() {
     if (!client.connected()) {
     long now = millis();
@@ -133,6 +129,6 @@ void loop() {
     // Client connected
     client.loop();
     publishMessage();
-    delay(5000);
+    delay(PUB_FREQUENCY); // TODO: don't sleep just check elapsed time if timeout
   }
 }
