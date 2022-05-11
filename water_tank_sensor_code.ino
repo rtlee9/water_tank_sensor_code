@@ -18,7 +18,7 @@
 #define RANGE 5000 // Depth measuring range 5000mm (for water)
 #define RESISTANCE 220.0 // ohms of the resistor
 #define MM_PER_INCH 25.4 // millimeters per inch
-#define CURRENT_OFFSET 0.6 // calibration constant in amps
+#define CURRENT_OFFSET 0 // calibration constant in amps
 #define NUM_READINGS 50
 #define PUB_FREQUENCY 5000  // ms frequency of publishing sensor readings
 #define RESOLUTION_BITS 10 // analog resolution
