@@ -68,7 +68,7 @@ void publishMessage()
   }
   doc["sensor_voltage"] = dataVoltage;
   // doc["sensor_depth_mm"] = depth;
-  doc["sensor_depth_in"] = depth / MM_PER_INCH;
+  doc["value"] = depth / MM_PER_INCH;
   doc["sensor_analog"] = analog;
   // doc["sensor_readings"] = readings;
   doc["sensor_current"] = dataCurrent;
