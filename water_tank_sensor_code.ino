@@ -76,7 +76,7 @@ void publishMessage()
   char jsonBuffer[512];
   serializeJson(doc, jsonBuffer); // print to client
   client.publish(PUBLISH_TOPIC, jsonBuffer);
-  
+
   Serial.println(jsonBuffer);  // print to serial
 }
 
@@ -86,6 +86,10 @@ void setup() {
   while (!Serial) {
     ; // wait for serial port to connect. Needed for native USB port only
   }
+  
+  // initialize digital pin LED_BUILTIN as an output.
+  pinMode(LED_BUILTIN, OUTPUT);
+  statusLight(10, 100);
 
   // check for the WiFi module:
   if (WiFi.status() == WL_NO_MODULE) {
@@ -108,6 +112,12 @@ void setup() {
 
     // wait 5 seconds for connection:
     delay(5000);
+void statusLight(int num_readings, int sleep) {
+  for (int n = 0; n < num_readings; n++) {
+    digitalWrite(LED_BUILTIN, HIGH);   // turn the LED on (HIGH is the voltage level)
+    delay(sleep);                       // wait
+    digitalWrite(LED_BUILTIN, LOW);    // turn the LED off by making the voltage LOW
+    delay(sleep);                       // wait
   }
 
 
@@ -129,6 +139,7 @@ void loop() {
     }
   } else {
     // Client connected
+    digitalWrite(LED_BUILTIN, HIGH);
     client.loop();
     publishMessage();
     delay(PUB_FREQUENCY); // TODO: don't sleep just check elapsed time if timeout
