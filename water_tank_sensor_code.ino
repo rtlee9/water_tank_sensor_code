@@ -80,6 +80,25 @@ void publishMessage()
   Serial.println(jsonBuffer);  // print to serial
 }
 
+void connectWifi() {
+  // attempt to connect to WiFi network:
+  while (status != WL_CONNECTED) {
+    Serial.print("Attempting to connect to WPA SSID: ");
+    Serial.println(WIFI_SSID);
+    // Connect to WPA/WPA2 network:
+    status = WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
+
+    // wait 5 seconds for connection:
+    digitalWrite(LED_BUILTIN, HIGH);   // turn the LED on (HIGH is the voltage level)
+    delay(200);
+    digitalWrite(LED_BUILTIN, LOW);   // turn the LED on (HIGH is the voltage level)
+    delay(5000);
+  }
+  Serial.println("You're connected to the network");
+  statusLight(5, 100);
+}
+
+
 void setup() {
   // Initialize serial and wait for port to open:
   Serial.begin(9600);
@@ -100,15 +119,11 @@ void setup() {
     Serial.println("Please upgrade the firmware");
   }
 
-  // attempt to connect to WiFi network:
-  while ( status != WL_CONNECTED) {
-    Serial.print("Attempting to connect to WPA SSID: ");
-    Serial.println(WIFI_SSID);
-    // Connect to WPA/WPA2 network:
-    status = WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
+  connectWifi();
+  lastReconnectAttempt = 0;  // set MQTT last attempt
+  analogReadResolution(RESOLUTION_BITS);
+}
 
-    // wait 5 seconds for connection:
-    delay(5000);
 void statusLight(int num_readings, int sleep) {
   for (int n = 0; n < num_readings; n++) {
     digitalWrite(LED_BUILTIN, HIGH);   // turn the LED on (HIGH is the voltage level)
@@ -116,16 +131,17 @@ void statusLight(int num_readings, int sleep) {
     digitalWrite(LED_BUILTIN, LOW);    // turn the LED off by making the voltage LOW
     delay(sleep);                       // wait
   }
-
-
-  Serial.println("You're connected to the network");
-  lastReconnectAttempt = 0;
-
-  analogReadResolution(RESOLUTION_BITS);
 }
 
 void loop() {
-    if (!client.connected()) {
+  // ensure connected to wifi
+  if (status != WL_CONNECTED) {
+    connectWifi();
+  }
+
+  // ensure connected to MQTT
+  if (!client.connected()) {
+    digitalWrite(LED_BUILTIN, LOW);
     long now = millis();
     if (now - lastReconnectAttempt > 5000) {
       lastReconnectAttempt = now;
