@@ -74,8 +74,14 @@ void publishMessage()
   doc["sensor_current"] = dataCurrent;
 
   char jsonBuffer[512];
-  serializeJson(doc, jsonBuffer); // print to client
-  client.publish(PUBLISH_TOPIC, jsonBuffer);
+  serializeJson(doc, jsonBuffer);
+  // publish to test topic if on serial (native USB) else publish to prod
+  if (Serial) {
+    client.publish(TEST_TOPIC, jsonBuffer);
+  }
+  else {
+    client.publish(PUBLISH_TOPIC, jsonBuffer);
+  }
 
   Serial.println(jsonBuffer);  // print to serial
 }
