@@ -121,7 +121,9 @@ void connectWifi() {
 void setup() {
   // Initialize serial and wait for port to open:
   Serial.begin(9600);
-  
+  // This delay gives the chance to wait for a Serial Monitor without blocking if none is found
+  delay(1500); 
+
   // initialize digital pin LED_BUILTIN as an output.
   pinMode(LED_BUILTIN, OUTPUT);
   statusLight(10, 100);
