@@ -4,6 +4,7 @@
 #include <WiFiNINA.h>
 #include <SPI.h>
 #include <PubSubClient.h>
+#include <ArduinoOTA.h>
 
 
 // The MQTT topics that this device should publish/subscribe
@@ -128,6 +129,10 @@ void setup() {
   connectWifi();
   lastReconnectAttempt = 0;  // set MQTT last attempt
   analogReadResolution(RESOLUTION_BITS);
+
+  // OTA
+  ArduinoOTA.begin(WiFi.localIP(), "nano_water_monitor", OTA_PASSWORD, InternalStorage);
+
 }
 
 void statusLight(int num_readings, int sleep) {
@@ -158,6 +163,7 @@ void loop() {
     }
   } else {
     // Client connected
+    ArduinoOTA.poll();
     digitalWrite(LED_BUILTIN, HIGH);
     client.loop();
     publishMessage();
