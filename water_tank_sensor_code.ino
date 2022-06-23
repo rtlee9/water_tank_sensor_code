@@ -27,6 +27,7 @@
 int status = WL_IDLE_STATUS;     // the WiFi radio's status
 WiFiClient wifiClient;
 long lastReconnectAttempt = 0;
+long lastReset = 0;
 PubSubClient client("io.adafruit.com", 1883, wifiClient);
 
 boolean reconnect() {
@@ -99,7 +100,7 @@ void connectWifi() {
   if (fv < WIFI_FIRMWARE_LATEST_VERSION) {
     Serial.println("Please upgrade the firmware");
   }
-  
+
   // attempt to connect to WiFi network:
   while (status != WL_CONNECTED) {
     Serial.print("Attempting to connect to WPA SSID: ");
@@ -122,7 +123,7 @@ void setup() {
   // Initialize serial and wait for port to open:
   Serial.begin(9600);
   // This delay gives the chance to wait for a Serial Monitor without blocking if none is found
-  delay(1500); 
+  delay(1500);
 
   // initialize digital pin LED_BUILTIN as an output.
   pinMode(LED_BUILTIN, OUTPUT);
@@ -130,6 +131,7 @@ void setup() {
 
   connectWifi();
   lastReconnectAttempt = 0;  // set MQTT last attempt
+  lastReset = millis();
   analogReadResolution(RESOLUTION_BITS);
 
   // OTA
@@ -147,6 +149,13 @@ void statusLight(int num_readings, int sleep) {
 }
 
 void loop() {
+  long now = millis();
+
+  if (now - lastReset > 86400000) {
+    // daily reset
+    NVIC_SystemReset();
+  }
+
   // ensure connected to wifi
   if (status != WL_CONNECTED) {
     connectWifi();
@@ -155,7 +164,6 @@ void loop() {
   // ensure connected to MQTT
   if (!client.connected()) {
     digitalWrite(LED_BUILTIN, LOW);
-    long now = millis();
     if (now - lastReconnectAttempt > 5000) {
       lastReconnectAttempt = now;
       // Attempt to reconnect
