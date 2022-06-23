@@ -165,6 +165,9 @@ void loop() {
   if (!client.connected()) {
     digitalWrite(LED_BUILTIN, LOW);
     if (now - lastReconnectAttempt > 5000) {
+      digitalWrite(LED_BUILTIN, HIGH);
+      delay(200);
+      digitalWrite(LED_BUILTIN, LOW);
       lastReconnectAttempt = now;
       // Attempt to reconnect
       if (reconnect()) {
