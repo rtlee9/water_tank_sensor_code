@@ -151,7 +151,7 @@ void statusLight(int num_readings, int sleep) {
 void loop() {
   long now = millis();
 
-  if (now - lastReset > 86400000) {
+  if (now - lastReset > 3600000) {
     // daily reset
     NVIC_SystemReset();
   }
